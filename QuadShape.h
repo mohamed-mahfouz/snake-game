@@ -9,7 +9,7 @@ struct QuadShape
 
     QuadShape(){}
 
-    QuadShape(Point pointOne, Point pointTwo, Point pointThree, Point PointFour)
+    QuadShape(Point pointOne, Point pointTwo, Point pointThree, Point pointFour)
     {
         this->pointOne = pointOne;
         this->pointTwo = pointTwo;
