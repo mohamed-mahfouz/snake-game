@@ -36,13 +36,8 @@ public:
 
 	void generateFood()
 	{
-		//bottomLeft = 0 , bottomRight = 600
-		//upLeft     = 0 , upRight     = 600 
-		//so positions must be between 10 and 590 !
-
 		position.x = rand() % 570 + 15.0f;
 		position.y = rand() % 570 + 15.0f;
-
 		draw();
 	}
 };
