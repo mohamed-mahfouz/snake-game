@@ -4,9 +4,11 @@ class Board
 {
 	short width;
 	short height;
+	short boundaryWidth;
+	Color boardColor;
 	GLdouble rows;
 	GLdouble columns;
-	Color boardColor;
+	
 
 	void boardPosition(int x = 100, int y = 100)
 	{
@@ -29,26 +31,17 @@ class Board
 	void coordinates()
 	{
 		boardMode();
-		gluOrtho2D(0.0, this->rows, 0.0, this->columns);
+		gluOrtho2D(0.0, rows, 0.0, columns);
 	}
 
 public:
 	Board(short width, short height)
 	{
-		this->height = height;
-		this->width = width;
-		this->rows = this->columns = 600;
+		 this->height = height;
+		 this->width  = width;
+		 this->boundaryWidth = 10;
+		 this->rows = this->columns = 40;
 		
-	}
-
-	short getWidth()
-	{
-		return width;
-	}
-
-	short getHeight()
-	{
-		return height;
 	}
 
 	void initializeBoard(Color rgbColor = Color(0.0f, 0.0f, 0.0f))
@@ -74,17 +67,26 @@ public:
 		boardPosition(x, y);
 	}
 
-
-	void changeCoordinates(GLdouble rows, GLdouble columns)
+	Point getCoordinates() 
 	{
-		this->rows = rows;
-		this->columns = columns;
+		return Point(rows  , columns );
+	}
+
+
+	short getWidth() 
+	{
+		return width;
+	}
+
+	short getHeight() 
+	{
+		return height;
 	}
 
 	void displayBoundaries()
 	{
 		
-		glLineWidth(10.0);
+		glLineWidth(boundaryWidth);
 		glColor3f(1.0, 0.0, 0.0);
 		glBegin(GL_LINES);
 		glVertex2d(0, 0); glVertex2d(0 , columns);
@@ -92,7 +94,6 @@ public:
 		glVertex2d(rows, columns); glVertex2d(0, columns);
 		glVertex2d(rows, columns); glVertex2d(rows, 0);
 		glEnd();
-
 	}
 
 };

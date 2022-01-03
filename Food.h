@@ -3,6 +3,9 @@
 class Food
 {
 	int score;
+	bool isGenerated;
+	short boardWidth;
+	short boardHeight;
 	Point position;
 	Color rgbColor;
 
@@ -10,20 +13,19 @@ class Food
 	{
 		glColor3f(rgbColor.red, rgbColor.green, rgbColor.blue);
 		glBegin(GL_QUADS);
-		glVertex2f(position.x, position.y);
-		glVertex2f(position.x + 20.0f, position.y);
-		glColor3f(rgbColor.red - 0.3f, rgbColor.green - 0.2f, rgbColor.blue + 0.1f);
-		glVertex2f(position.x + 20.0f, position.y - 20.0f);
-		glVertex2f(position.x, position.y - 20.0f);
+		glVertex2d(position.x, position.y); glVertex2d(position.x + 1, position.y); glVertex2d(position.x + 1, position.y + 1); glVertex2d(position.x, position.y + 1);
 		glEnd();
-		glFlush();
 
 	}
+
 public:
-	Food(Color rgbColor, int score = 10)
+	Food( Point BoardCoordinates )
 	{
-		this->rgbColor = rgbColor;
+		this->rgbColor = Color(0.7,0.9,0.0);
 		this->score = score;
+		this->isGenerated = false;
+		this->boardHeight = BoardCoordinates.y;
+		this->boardWidth = BoardCoordinates.x;
 	}
 
 	void changeScore(int score)
@@ -34,10 +36,35 @@ public:
 		this->score = score;
 	}
 
+	void changeColor(Color rgbColor) 
+	{
+		this -> rgbColor = rgbColor;
+	}
+
 	void generateFood()
 	{
-		position.x = rand() % 570 + 15.0f;
-		position.y = rand() % 570 + 15.0f;
+		
+		if (!isGenerated) 
+		{
+			position.x = 1 + rand() % boardWidth  - 2;
+			position.y = 1 + rand() % boardHeight - 2;
+			isGenerated = true;
+		}
 		draw();
+	}
+
+	void regenrate() 
+	{
+		isGenerated = false;
+	}
+
+	short getX() 
+	{
+		return position.x;
+	}
+
+	short getY() 
+	{
+		return position.y;
 	}
 };
