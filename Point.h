@@ -2,12 +2,12 @@
 
 struct Point 
 {
-	float x;
-	float y;
+	int x;
+	int y;
 
 	Point() {}
 
-	Point(float x, float y) 
+	Point(int x, int y) 
 	{
 		this->x = x;
 		this->y = y;

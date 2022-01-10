@@ -1,128 +1,153 @@
 #pragma once
+#define maxLength 150 
+
 class Snake
 {
-	struct SnakeNode
+
+	class SnakeIterator
 	{
-		Point position;
-		Color snakeColor;
-		SnakeNode* next;
+		int index;
+		const Snake* snake;
 
-		SnakeNode()
+	public:
+		SnakeIterator(const Snake* snake)
 		{
-			this->next = NULL;
-			this->snakeColor = Color(1.0f, 0.0f, 0.0f);
-			position = Point(300, 300);
-
-
+			this->snake = snake;
 		}
 
-		void setColor(Color snakeColor)
+		void first()
 		{
-			this->snakeColor = snakeColor;
+			index = 0;
 		}
 
-		void drawSnakeHead()
+		void next()
 		{
-			glColor3f(snakeColor.red, snakeColor.green, snakeColor.blue);
-			glBegin(GL_QUADS);
-			glVertex2f(position.x, position.y);
-			glVertex2f(position.x + 20.0f, position.y);
-			glVertex2f(position.x + 20.0f, position.y - 20.0f);
-			glVertex2f(position.x, position.y - 20.0f);
-			glEnd();
+			index++;
+		}
+
+		bool isEnd()
+		{
+			return index == snake->snakeLength;
+		}
+
+		Point cuurentItem()
+		{
+			return snake->positions[index];
 		}
 
 	};
 
-	SnakeNode* head;
-	SnakeNode* tail;
-	bool isMove = false;
 	Direction direction;
-	int health;
+	Point positions[maxLength] = {Point(20,20),Point(20,19),Point(20,18)};
+	int snakeLength = 3;
+	bool eatItSelf;
 
-public:
-	Snake()
+	bool _isEatItSelf(Point position)
 	{
-		head = tail = new SnakeNode();
-		head->setColor(Color(1.0f, 0.0f, 0.0f));
-		direction = Direction::left;
-		move(direction);
-		health = 100;
-	}
+		if (getHeadPosition().x == position.x && getHeadPosition().y == position.y)
+			return true;
 
-	void changeHealth(int penalty)
-	{
-		if (penalty < 10 || penalty > 100)
-			throw exception("health must be between 0 and 100!");
-
-		this->health -= penalty;
-	}
-
-	void eat()
-	{
-
-	}
-
-	void move(Direction dir)
-	{
-		switch (dir)
-		{
-		case Direction::up:
-			head->position.y++;
-			break;
-		case Direction::down:
-			head->position.y--;
-			break;
-		case Direction::left:
-			head->position.x--;
-			break;
-		case Direction::right:
-			head->position.x++;
-			break;
-		default:
-			break;
-		}
+		return false;
 
 	}
 
 	void draw()
 	{
-			head->drawSnakeHead();
 
-			SnakeNode* temp = new SnakeNode();
-			temp->setColor(Color(0.0f, 0.8f, 0.4f));
-			temp->position.x += 20;
-			glColor3f(temp->snakeColor.red, temp->snakeColor.green, temp->snakeColor.blue);
-			glBegin(GL_QUADS);
-			glVertex2f(temp->position.x, temp->position.y);
-			glVertex2f(temp->position.x + 20.0f, temp->position.y);
-			glVertex2f(temp->position.x + 20.0f, temp->position.y - 20.0f);
-			glVertex2f(temp->position.x, temp->position.y - 20.0f);
-			glEnd();
-
-		
-
-		/*Point newNodePosition = head->position;
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < snakeLength; i++)
 		{
 
-			SnakeNode* newNode = new SnakeNode();
-			newNodePosition.x += 20;
-			newNode->position = newNodePosition;
-			temp->next = newNode;
-			temp = temp->next;
+			int headIndex = 0;
+			if (i > headIndex && _isEatItSelf(positions[i]))
+			{
+				eatItSelf = true;
+			}
+			
+			if (i == headIndex)
+				glColor3f(1.0f, 0.0f, 0.0f);
 
-			temp->setColor(Color(0.0f, 0.8f, 0.4f));
-			glColor3f(temp->snakeColor.red, temp->snakeColor.green, temp->snakeColor.blue);
+			else
+				glColor3f(0.0f, 1.0f, 0.0f);
+
 			glBegin(GL_QUADS);
-			glVertex2f(temp->position.x, temp->position.y);
-			glVertex2f(temp->position.x + 20.0f, temp->position.y);
-			glVertex2f(temp->position.x + 20.0f, temp->position.y - 20.0f);
-			glVertex2f(temp->position.x, temp->position.y - 20.0f);
+			glVertex2d(positions[i].x, positions[i].y); glVertex2d(positions[i].x + 1, positions[i].y);
+			glVertex2d(positions[i].x + 1, positions[i].y + 1); glVertex2d(positions[i].x, positions[i].y + 1);
 			glEnd();
+
 		}
-		*/
+
 	}
+
+public:
+	Snake()
+	{
+		srand(time(NULL));
+		eatItSelf = false;
+		direction = (Direction)(rand() % 3);
+			
+	}
+
+	void setDirection(Direction input)
+	{
+		direction = input;
+	}
+
+	Direction getDirection()
+	{
+		return direction;
+	}
+
+	Point getHeadPosition()
+	{
+		return positions[0];
+	}
+
+	void move()
+	{
+
+		for (int i = snakeLength - 1; i > 0; i--)
+		{
+			positions[i] = positions[i - 1];
+
+		}
+
+		switch (direction)
+		{
+		case Direction::up:
+			positions[0].y++;
+			break;
+		case Direction::down:
+			positions[0].y--;
+			break;
+		case Direction::left:
+			positions[0].x--;
+			break;
+		case Direction::right:
+			positions[0].x++;
+			break;
+		default:
+			break;
+		}
+
+		draw();
+
+	}
+
+	void grow()
+	{
+		this->snakeLength++;
+	}
+
+	SnakeIterator* getIterator()
+	{
+		return new SnakeIterator(this);
+	}
+
+	bool isEatItSelf() 
+	{
+		return eatItSelf;
+	}
+
 };
 
 

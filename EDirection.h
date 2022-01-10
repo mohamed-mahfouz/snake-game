@@ -2,9 +2,10 @@
 
 enum Direction 
 { 
-	stop,
+	
 	up, 
-	down,
 	left,
-	right 
+	right, 
+	down,
+	stop
 };

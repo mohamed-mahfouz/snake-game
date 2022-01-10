@@ -2,14 +2,13 @@
 
 class Board
 {
-	short width;
-	short height;
-	short boundaryWidth;
-	Color boardColor;
+	Color rgbColor;
 	GLdouble rows;
 	GLdouble columns;
+	short width;
+	short height;
 	
-
+	
 	void boardPosition(int x = 100, int y = 100)
 	{
 		glutInitWindowPosition(x, y);
@@ -35,16 +34,17 @@ class Board
 	}
 
 public:
-	Board(short width, short height)
+	Board()
 	{
-		 this->height = height;
-		 this->width  = width;
-		 this->boundaryWidth = 10;
+		 
 		 this->rows = this->columns = 40;
+		 this->width = 700;
+		 this->height = 700;
+		 this->rgbColor = Color(0.2f, 0.4f, 0.3f);
 		
 	}
 
-	void initializeBoard(Color rgbColor = Color(0.0f, 0.0f, 0.0f))
+	void initializeBoard()
 	{
 		glClearColor(rgbColor.red, rgbColor.green, rgbColor.blue, 1.0f);
 		coordinates();
@@ -67,33 +67,40 @@ public:
 		boardPosition(x, y);
 	}
 
-	Point getCoordinates() 
-	{
-		return Point(rows  , columns );
-	}
-
-
-	short getWidth() 
-	{
-		return width;
-	}
-
-	short getHeight() 
-	{
-		return height;
-	}
-
 	void displayBoundaries()
 	{
-		
+		short boundaryWidth = 10;
 		glLineWidth(boundaryWidth);
-		glColor3f(1.0, 0.0, 0.0);
+		glColor3f(0.9, 0.2, 0.0);
 		glBegin(GL_LINES);
-		glVertex2d(0, 0); glVertex2d(0 , columns);
+		glVertex2d(0, 0); glVertex2d(0, columns);
 		glVertex2d(0, 0); glVertex2d(rows, 0);
 		glVertex2d(rows, columns); glVertex2d(0, columns);
 		glVertex2d(rows, columns); glVertex2d(rows, 0);
 		glEnd();
 	}
+
+	void setColor(Color rgbColor)
+	{
+		this->rgbColor = rgbColor;
+	}
+
+	short getWidth()
+	{
+		return width;
+	}
+
+	short getHeight()
+	{
+		return height;
+	}
+
+
+	Point getCoordinates() 
+	{
+		return Point(rows , columns );
+	}
+
+		
 
 };
