@@ -21,6 +21,7 @@ class FoodManager
 public:
 	FoodManager()
 	{
+		isGenerated = false;
 		srand(time(NULL));
 	}
 
@@ -34,6 +35,7 @@ public:
 
 	void Initialize() 
 	{
+
 		if (!isGenerated)
 		{
 			position.x = 1 + rand() % (boardBoundaries.x - 2);

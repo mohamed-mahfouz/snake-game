@@ -13,10 +13,10 @@
 #include"Level.h"
 #include"FoodManager.h"
 
-
+//Singelton
 class GameManager 
 {
-	
+	static GameManager* instance;
 	int playerScore;
 	int level;
 	Board gameBoard;
@@ -110,17 +110,94 @@ class GameManager
 			}
 		}
 	}
-public:
-	GameManager() 
+
+	void manageLevels()
 	{
+
+		switch (level)
+		{
+		case 2:
+			applyLevel(mediumLevel());
+			break;
+		case 3:
+			applyLevel(hardLevel());
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	Level* mediumLevel()
+	{
+
+		Wall* verticalWall = new Wall(QuadShape(Point(18, 10), Point(20, 10), Point(20, 30), Point(18, 30)));
+
+		Level* levelToReturn = new Level;
+		levelToReturn->addObstacle(verticalWall);
+		return levelToReturn;
+
+	}
+
+	Level* hardLevel()
+	{
+
+		Wall* verticalWall = new Wall(QuadShape(Point(18, 10), Point(20, 10), Point(20, 30), Point(18, 30)));
+		Wall* horizentalWall = new Wall(QuadShape(Point(10, 19), Point(10, 22), Point(30, 22), Point(30, 19)));
+
+		Level* levelToReturn = new Level;
+		levelToReturn->addObstacle(verticalWall);
+		levelToReturn->addObstacle(horizentalWall);
+		return levelToReturn;
+	}
+
+	void applyLevel(Level* level)
+	{
+
+		auto obstacles = level->getAllObstacles();
+
+		for (int i = 0; i < obstacles.size(); i++)
+		{
+
+			pair fromToEndWidthPair = obstacles[i]->widthCoordinates();
+			pair fromToEndHeightPair = obstacles[i]->heightCoordinates();
+			int widthBegin = fromToEndWidthPair.first;
+			int widthEnd = fromToEndWidthPair.second;
+			int heightBegin = fromToEndHeightPair.first;
+			int heightEnd = fromToEndHeightPair.second;
+
+			if ((foodManager.getPosition().x >= widthBegin && foodManager.getPosition().x <= widthEnd) &&
+				(foodManager.getPosition().y >= heightBegin && foodManager.getPosition().y <= heightEnd))
+
+			{
+				foodManager.regenerate();
+			}
+
+			if ((snake.getHeadPosition().x >= widthBegin && snake.getHeadPosition().x <= widthEnd - 1) &&
+				(snake.getHeadPosition().y >= heightBegin && snake.getHeadPosition().y <= heightEnd - 1))
+			{
+
+				snake.setPenalty(obstacles[i]->penalty());
+			}
+
+		}
+
+	}
+
+
+	GameManager()
+	{
+	
 		level = playerScore = 0;
 		gameBoard.setColor(Color(0.0f, 0.2f, 0.4f));
 		food.setColor(Color(0.9f, 0.9f, 0.0f));
 		food.setScore(10);
 		foodManager.invokeFood(food);
 		foodManager.invokeBoardBoundaries(gameBoard.getCoordinates());
-	
+
 	}
+
+public:
 
 	void displayCallback()
 	{
@@ -189,77 +266,15 @@ public:
 		this->level = level;
 	}
 
-	void manageLevels() 
+	static GameManager* getInstacne() 
 	{
-		
-		switch (level)
-		{
-		case 2:
-			applyLevel(mediumLevel());
-			break;
-		case 3:
-			applyLevel(hardLevel());
-			break;
-		default:
-			break;
-		}
+		if (instance == NULL)
+			instance = new GameManager();
 
+		return instance;
 	}
-
-	Level* mediumLevel() 
-	{
-
-		Wall* verticalWall = new Wall(QuadShape(Point(18, 10), Point(20, 10), Point(20, 30), Point(18, 30)));
-
-		Level* levelToReturn = new Level;
-		levelToReturn->addObstacle(verticalWall);
-		return levelToReturn;
-
-	}
-
-	Level* hardLevel() 
-	{
-
-		Wall* verticalWall = new Wall(QuadShape(Point(18, 10), Point(20, 10), Point(20, 30), Point(18, 30)));
-		Wall* horizentalWall = new Wall(QuadShape(Point(10, 19), Point(10, 22), Point(30, 22), Point(30, 19)));
-
-		Level* levelToReturn = new Level;
-		levelToReturn->addObstacle(verticalWall);
-		levelToReturn->addObstacle(horizentalWall);
-		return levelToReturn;
-	}
-
-	void applyLevel(Level* level) 
-	{
-
-		auto obstacles = level->getAllObstacles();
-		
-		for (int i = 0; i < obstacles.size(); i++) 
-		{
-
-			pair fromToEndWidthPair = obstacles[i]->widthCoordinates();
-			pair fromToEndHeightPair = obstacles[i]->heightCoordinates();
-			int widthBegin = fromToEndWidthPair.first;
-			int widthEnd = fromToEndWidthPair.second;
-			int heightBegin = fromToEndHeightPair.first;
-			int heightEnd = fromToEndHeightPair.second;	
-
-			if ((foodManager.getPosition().x >= widthBegin && foodManager.getPosition().x <= widthEnd)&&
-				(foodManager.getPosition().y >= heightBegin && foodManager.getPosition().y <= heightEnd))
-				
-			{
-				foodManager.regenerate();
-			}
-				
-			if ((snake.getHeadPosition().x >= widthBegin   && snake.getHeadPosition().x <= widthEnd-1 ) &&
-				(snake.getHeadPosition().y >= heightBegin  && snake.getHeadPosition().y <= heightEnd-1))
-			{
-
-				snake.setPenalty(obstacles[i]->penalty());
-			}
-				
-		}
-		
-	}
+	
 
 };
+
+GameManager* GameManager::instance = NULL;

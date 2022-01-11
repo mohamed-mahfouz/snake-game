@@ -2,34 +2,33 @@
 #include<vector>
 #include<GL/glut.h>
 
-
 using namespace std;
 
 #include"GameManager.h"
 
-GameManager gameManager;
+
 
 void displayCallback()
 {
-	
-	gameManager.displayCallback();
-	
+
+	GameManager::getInstacne()->displayCallback();
+
 }
 
 void reshapeCallback(GLsizei x, GLsizei y)
 {
-	gameManager.reshapeCallback(x,y);
+	GameManager::getInstacne()->reshapeCallback(x, y);
 }
 
 void inputCallback(int key, int x, int y)
 {
-	gameManager.inputCallback(key, x, y);
+	GameManager::getInstacne()->inputCallback(key, x, y);
 }
 
 void initialize()
 {
-	gameManager.initialize();
-	
+	GameManager::getInstacne()->initialize();
+
 }
 
 void timerCallback(int t)
@@ -41,8 +40,8 @@ void timerCallback(int t)
 void menuCallback(int level)
 {
 
-	gameManager.setLevel(level);
-	
+	GameManager::getInstacne()->setLevel(level);
+
 }
 
 void createMenu()
@@ -56,11 +55,25 @@ void createMenu()
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
+void rules()
+{
+	cout << "RULES : --->"<<endl;
+	cout <<"\t*Main objective is to eat the food" << endl;
+	cout << "\t*Use UP(^), DOWN(v), RIGHT(>), and LEFT(<) arrow keys to move your snake." << endl;
+	cout << "\t*Try neither to CRASH with the WALLS nor with your BODY." << endl;
+	cout << "\t*The more you eat food, your score increases and the bigger you become." << endl;
+	cout << "\t*You have to eat 50 preys to win the challenge." << endl;
+	cout << "\t*After starting the game, first right click using mouse and select the difficulty." << endl << endl;
+	cout << "Press any key to start the game and have fun D:\n\n\n";
+
+	getchar();
+
+}
 
 int main(int argc, char** argv)
 {
-	
-	gameManager.run(argc, argv);
+	rules();
+	GameManager::getInstacne()->run(argc, argv);
 	glutDisplayFunc(displayCallback);
 	glutReshapeFunc(reshapeCallback);
 	glutSpecialFunc(inputCallback);
@@ -69,6 +82,6 @@ int main(int argc, char** argv)
 	initialize();
 	createMenu();
 	glutMainLoop();
-	
+
 	return 0;
 }
