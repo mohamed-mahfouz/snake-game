@@ -3,38 +3,28 @@
 class Level 
 {
 	vector<IObstacle*> obstacles;
-	int score;
-	int speed;
+
 public:
-	Level(int speed )
-	{
-		this->obstacles = obstacles;
-		this->speed = speed;
-	}
 
-	void setScore(int score) 
+	~Level()
 	{
-		this->score = score;
-	}
-
-	int getScore() 
-	{
-		return score;
-	}
-
-	void setSpeed(int speed) 
-	{
-		this->speed = speed;
-	}
-
-	int getSpeed() 
-	{
-		return this->speed;
+		if (!obstacles.empty()) 
+		{
+			for (int i = 0; i < obstacles.size(); i++)
+			{
+				delete obstacles[i];
+			}
+		}
 	}
 
 	void addObstacle(IObstacle* obstacle) 
 	{
 		obstacles.push_back(obstacle);
+	}
+
+	const vector<IObstacle*> getAllObstacles() 
+	{
+		return obstacles;
 	}
 
 };

@@ -3,6 +3,8 @@
 __interface IObstacle
 {
 	void draw();
-	void damage();
+	int penalty();
+	pair<int,int> widthCoordinates();
+	pair<int,int> heightCoordinates();
 
 };

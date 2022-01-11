@@ -38,9 +38,10 @@ class Snake
 	};
 
 	Direction direction;
-	Point positions[maxLength] = {Point(20,20),Point(20,19),Point(20,18)};
+	Point positions[maxLength] = {Point(10,6),Point(10,5),Point(10,4)};
 	int snakeLength = 3;
-	bool eatItSelf;
+	short health = 100;
+	bool eatItSelf = false;
 
 	bool _isEatItSelf(Point position)
 	{
@@ -82,7 +83,6 @@ public:
 	Snake()
 	{
 		srand(time(NULL));
-		eatItSelf = false;
 		direction = (Direction)(rand() % 3);
 			
 	}
@@ -146,6 +146,19 @@ public:
 	bool isEatItSelf() 
 	{
 		return eatItSelf;
+	}
+
+	void setPenalty(short penalty) 
+	{
+		if (penalty < 0 || penalty > 100) 
+			throw exception("Penalty should be between 0 and 100!");
+		
+		this->health -= penalty;
+	}
+
+	short getHealth() 
+	{
+		return health;
 	}
 
 };

@@ -38,6 +38,25 @@ void timerCallback(int t)
 	glutTimerFunc(100, timerCallback, 0);
 }
 
+void menuCallback(int level)
+{
+
+	gameManager.setLevel(level);
+	
+}
+
+void createMenu()
+{
+	int submenu_id = glutCreateMenu(menuCallback);
+	glutAddMenuEntry("Easy", 1);
+	glutAddMenuEntry("Medium", 2);
+	glutAddMenuEntry("Hard", 3);
+	int menu_id = glutCreateMenu(menuCallback);
+	glutAddSubMenu("Select Difficulty", submenu_id);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+
 int main(int argc, char** argv)
 {
 	
@@ -48,6 +67,7 @@ int main(int argc, char** argv)
 	glutTimerFunc(100, timerCallback, 0);
 
 	initialize();
+	createMenu();
 	glutMainLoop();
 	
 	return 0;
